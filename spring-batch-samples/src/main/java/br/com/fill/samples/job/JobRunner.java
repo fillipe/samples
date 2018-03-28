@@ -14,7 +14,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class JobRunner {
 
@@ -24,17 +24,17 @@ public class JobRunner {
 		long bank = 237;
 
 		// Carrega o contexto do Spring
-		ApplicationContext context = new ClassPathXmlApplicationContext("job-tax-calculator.xml");
+//		ApplicationContext context = new ClassPathXmlApplicationContext("job-tax-calculator.xml");
+		ApplicationContext context = new AnnotationConfigApplicationContext(JobTaxCalculator.class);
 
 		// Obtem atraves do contexto alguns dos beans necessarios para a execucao do job
 		JobLauncher jobLauncher = (JobLauncher) context.getBean("jobLauncher");
-		Job job = (Job) context.getBean("jobTaxCalculator");
+		Job job = (Job) context.getBean("taxCalculatorJob");
 
 		// Cria os parametros para o job
 		JobParameters jobParameters = new JobParametersBuilder()
 				.addDate("DT_TRANSACTION", dtTransaction)
 				.addLong("BANK", bank)
-				.addDate("NOW", new Date())
 				.toJobParameters();
 
 		try {

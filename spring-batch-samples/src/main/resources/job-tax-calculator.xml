@@ -13,10 +13,8 @@
 
 	<import resource="launch-context.xml" />
 
-	<bean class="br.com.fill.samples.job.JobTaxCalculator" />
-
-	<batch:job id="jobTaxCalculator">
-		<batch:step id="stepTaxCalculator">
+	<batch:job id="taxCalculatorJob">
+		<batch:step id="taxCalculatorStep">
 			<batch:tasklet>
 				<batch:chunk reader="reader" processor="processor"
 					writer="writer" commit-interval="10" />
@@ -24,4 +22,69 @@
 		</batch:step>
 	</batch:job>
 
+	<bean id="reader"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="dataSource" ref="dataSource" />
+		<property name="rowMapper">
+			<bean class="br.com.fill.samples.entity.mapper.TransactionRowMapper" />
+		</property>
+		<property name="preparedStatementSetter">
+			<bean class="br.com.fill.samples.entity.provider.TaxCalculatorReaderPreparedStatementSetter" scope="step">
+				<constructor-arg value="#{jobParameters['DT_TRANSACTION']}" />
+				<constructor-arg value="#{jobParameters['BANK']}" />
+			</bean>
+		</property>
+		<property name="sql">
+			<value>
+				<![CDATA[
+                    SELECT TRANS_ID, TRANS_DATE, BANK, VALUE, TRANS_TYPE
+                   	FROM TB_TRANSACTION
+                    WHERE TRANS_DATE < ? 
+                    	AND BANK = ?
+                ]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="processor" class="br.com.fill.samples.job.processor.TaxCalculatorProcessor" />
+
+	<bean id="writer"
+		class="org.springframework.batch.item.support.CompositeItemWriter">
+		<property name="delegates">
+			<list>
+				<ref bean="fooInsertWriter" />
+				<ref bean="transactionUpdateWriter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="fooInsertWriter"
+		class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="dataSource" />
+		<property name="itemSqlParameterSourceProvider">
+			<bean class="br.com.fill.samples.entity.provider.TransactionProvider" />
+		</property>
+		<property name="sql">
+			<value>
+				<![CDATA[
+                    INSERT INTO TB_FOO (FOO_DATE, TRANS_ID) VALUES (:FOO_DATE, :TRANS_ID)
+                ]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="transactionUpdateWriter"
+		class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="dataSource" />
+		<property name="itemSqlParameterSourceProvider">
+			<bean class="br.com.fill.samples.entity.provider.TransactionProvider" />
+		</property>
+		<property name="sql">
+			<value>
+				<![CDATA[
+                    UPDATE TB_TRANSACTION SET TAX = :TAX WHERE TRANS_ID = :TRANS_ID
+                ]]>
+			</value>
+		</property>
+	</bean>
 </beans>
