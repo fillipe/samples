@@ -37,12 +37,6 @@ public class JobTaxCalculator {
 	@Autowired
 	private DataSource dataSource;
 	
-//	@Value("#{jobParameters['DT_TRANSACTION']}")
-//	private Date dtTransaction;
-//	
-//	@Value("#{jobParameters['BANK']}")
-//	private Integer bank;
-	
 	@Autowired
     private JobBuilderFactory jobBuilderFactory;
 
