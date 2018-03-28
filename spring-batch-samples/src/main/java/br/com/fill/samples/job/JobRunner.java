@@ -34,6 +34,7 @@ public class JobRunner {
 		JobParameters jobParameters = new JobParametersBuilder()
 				.addDate("DT_TRANSACTION", dtTransaction)
 				.addLong("BANK", bank)
+				.addDate("NOW", new Date())
 				.toJobParameters();
 
 		try {

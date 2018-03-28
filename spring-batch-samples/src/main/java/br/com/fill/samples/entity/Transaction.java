@@ -9,7 +9,7 @@ public class Transaction {
 
 	private Date date;
 
-	private Long bank;
+	private int bank;
 
 	private TransactionType type;
 
@@ -33,11 +33,11 @@ public class Transaction {
 		this.date = date;
 	}
 
-	public Long getBank() {
+	public int getBank() {
 		return bank;
 	}
 
-	public void setBank(Long bank) {
+	public void setBank(int bank) {
 		this.bank = bank;
 	}
 
