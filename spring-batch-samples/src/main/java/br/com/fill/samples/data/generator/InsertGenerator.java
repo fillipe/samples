@@ -5,6 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.sql.DataSource;
+
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import br.com.fill.samples.entity.TransactionType;
+
 public class InsertGenerator {
 
 	private static final double MIN_VALUE = 1.0;
@@ -14,21 +22,29 @@ public class InsertGenerator {
 	private static final String END_DATE = "31/12/2018";
 	
 	private static final int[] BANKS = {237, 33, 341, 1};
+	private static final TransactionType[] TYPES = {TransactionType.DEBIT, TransactionType.CREDIT};
 
 	private static final String DD_MM_YYYY = "dd/MM/yyyy";
 	private static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 	
 	public static void main(String[] args) {
+		AbstractApplicationContext context = new ClassPathXmlApplicationContext("classpath:launch-context.xml");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(context.getBean(DataSource.class));
 		
-		for (int i = 0; i < 1000; i++) {
+		int qtdInserts = 1000;
+		String[] inserts = new String[qtdInserts];
+		for (int i = 0; i < qtdInserts; i++) {
 			Integer bank = randomizeBank();
 			String date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).format(randomizeDate());
 			BigDecimal value = new BigDecimal(randomize(MIN_VALUE, MAX_VALUE).doubleValue()).setScale(2, BigDecimal.ROUND_HALF_UP);
+			TransactionType type = randomizeType();
 			
-			String insert = "INSERT INTO TB_TRANSACTION (TRANS_DATE, BANK, VALUE, TAX) VALUES ('%s', %s, %s, %s);\n";
-			
-			System.out.printf(insert, date, bank, value, null);
+			String insert = "INSERT INTO TB_TRANSACTION (TRANS_DATE, BANK, TRANS_VALUE, TRANS_TYPE, TAX) VALUES ('%s', %s, %s, '%s', %s);\n";
+			inserts[i] = String.format(insert, date, bank, value, type, null);
 		}
+		jdbcTemplate.batchUpdate(inserts);
+		
+		context.close();
 	}
 
 	private static Date randomizeDate() {
@@ -47,8 +63,11 @@ public class InsertGenerator {
 	}
 	
 	private static int randomizeBank() {
-		
-		return BANKS[randomize(0, BANKS.length - 1).intValue()];
+		return BANKS[Math.round(randomize(0, BANKS.length - 1).floatValue())];
+	}
+	
+	private static TransactionType randomizeType() {
+		return TYPES[Math.round(randomize(0, TYPES.length - 1).floatValue())];
 	}
 	
 	private static Number randomize(Number rngMax, Number rngMin) {
