@@ -13,15 +13,5 @@
 
 	<import resource="launch-context.xml" />
 
-	<bean class="br.com.fill.samples.job.JobTaxCalculator" />
-
-	<batch:job id="jobTaxCalculator">
-		<batch:step id="stepTaxCalculator">
-			<batch:tasklet>
-				<batch:chunk reader="reader" processor="processor"
-					writer="writer" commit-interval="10" />
-			</batch:tasklet>
-		</batch:step>
-	</batch:job>
 
 </beans>
