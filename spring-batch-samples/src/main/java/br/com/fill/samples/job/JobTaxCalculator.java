@@ -45,7 +45,7 @@ public class JobTaxCalculator {
     
     @Bean
     public Job taxCalculatorJob() {
-    	return jobBuilderFactory.get("jobTaxCalculator")
+		return jobBuilderFactory.get("jobTaxCalculator")
     			.start(step())
     			.build();
     }
@@ -65,7 +65,7 @@ public class JobTaxCalculator {
 	public JdbcCursorItemReader<Transaction> reader(@Value("#{jobParameters['DT_TRANSACTION']}") Date dtTransaction,
 			@Value("#{jobParameters['BANK']}") Integer bank) {
 		return new JdbcCursorItemReaderBuilder<Transaction>().dataSource(dataSource)
-				.sql("SELECT TRANS_ID, TRANS_DATE, BANK, VALUE, TRANS_TYPE FROM TB_TRANSACTION "
+				.sql("SELECT TRANS_ID, TRANS_DATE, BANK, TRANS_VALUE, TRANS_TYPE FROM TB_TRANSACTION "
 						+ "WHERE TRANS_DATE < ? AND BANK = ?")
 				.queryArguments(new Object[] { dtTransaction, bank }).rowMapper(new TransactionRowMapper())
 				.saveState(false).build();

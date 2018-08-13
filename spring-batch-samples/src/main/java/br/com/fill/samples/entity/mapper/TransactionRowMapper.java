@@ -17,7 +17,7 @@ public class TransactionRowMapper implements RowMapper<Transaction> {
 		t.setDate(rs.getDate("TRANS_DATE"));
 		t.setBank(rs.getInt("BANK"));
 		t.setType(TransactionType.valueOf(rs.getString("TRANS_TYPE")));
-		t.setValue(rs.getBigDecimal("VALUE"));
+		t.setValue(rs.getBigDecimal("TRANS_VALUE"));
 		return t;
 	}
 

@@ -38,9 +38,9 @@
 
 	
 	<!-- create job-meta tables automatically -->
-	<jdbc:initialize-database data-source="dataSource">
-		<jdbc:script location="org/springframework/batch/core/schema-drop-hsqldb.sql" />
-		<jdbc:script location="org/springframework/batch/core/schema-hsqldb.sql" />
-	</jdbc:initialize-database>
+<!-- 	<jdbc:initialize-database data-source="dataSource"> -->
+<!-- 		<jdbc:script location="org/springframework/batch/core/schema-drop-hsqldb.sql" /> -->
+<!-- 		<jdbc:script location="org/springframework/batch/core/schema-hsqldb.sql" /> -->
+<!-- 	</jdbc:initialize-database> -->
 	
 </beans>

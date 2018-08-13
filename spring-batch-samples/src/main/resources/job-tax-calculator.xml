@@ -37,7 +37,7 @@
 		<property name="sql">
 			<value>
 				<![CDATA[
-                    SELECT TRANS_ID, TRANS_DATE, BANK, VALUE, TRANS_TYPE
+                    SELECT TRANS_ID, TRANS_DATE, BANK, TRANS_VALUE, TRANS_TYPE
                    	FROM TB_TRANSACTION
                     WHERE TRANS_DATE < ? 
                     	AND BANK = ?
