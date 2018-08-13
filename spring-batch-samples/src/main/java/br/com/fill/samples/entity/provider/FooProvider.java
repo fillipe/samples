@@ -13,6 +13,7 @@ public class FooProvider implements ItemSqlParameterSourceProvider<Transaction> 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("TRANS_ID", item.getId());
 		params.addValue("FOO_DATE", item.getDate());
+		params.addValue("TAX", item.getTax());
 		return params;
 	}
 
