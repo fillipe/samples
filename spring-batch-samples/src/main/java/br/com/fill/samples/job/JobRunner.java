@@ -14,7 +14,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 public class JobRunner {
 
@@ -24,8 +24,8 @@ public class JobRunner {
 		long bank = 237;
 
 		// Carrega o contexto do Spring
-//		GenericApplicationContext context = new ClassPathXmlApplicationContext("job-tax-calculator.xml");
-		GenericApplicationContext context = new AnnotationConfigApplicationContext(JobTaxCalculator.class);
+//		AbstractApplicationContext context = new ClassPathXmlApplicationContext("job-tax-calculator.xml");
+		AbstractApplicationContext context = new AnnotationConfigApplicationContext(JobTaxCalculator.class);
 
 		// Obtem atraves do contexto alguns dos beans necessarios para a execucao do job
 		JobLauncher jobLauncher = (JobLauncher) context.getBean("jobLauncher");
