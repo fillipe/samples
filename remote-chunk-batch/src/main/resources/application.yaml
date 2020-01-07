@@ -1,0 +1,9 @@
+db:
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:hsql://localhost/testbatchdb
+    username: SA
+    password: 
+    
+broker:
+   url: tcp://localhost:61616
